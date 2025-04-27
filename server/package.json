@@ -7,6 +7,13 @@
     "@types/bun": "latest",
     "@types/jsonwebtoken": "^9.0.9"
   },
+  "scripts": {
+    "dev": "bun run --watch index.ts",
+    "clean": "rimraf dist",
+    "build": "bun build index.ts --outdir ./dist --target node",
+    "start": "node dist/index.js",
+    "postinstall": "npm run build"
+  },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
