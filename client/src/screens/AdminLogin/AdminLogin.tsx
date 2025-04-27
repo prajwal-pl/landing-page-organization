@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -26,9 +32,11 @@ export const AdminLogin: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Admin Login</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">
+            Admin Login
+          </CardTitle>
         </CardHeader>
-        
+
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
@@ -36,7 +44,7 @@ export const AdminLogin: React.FC = () => {
                 {error}
               </div>
             )}
-            
+
             <div className="space-y-2">
               <label htmlFor="username" className="text-sm font-medium">
                 Username
@@ -50,7 +58,7 @@ export const AdminLogin: React.FC = () => {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
               <label htmlFor="password" className="text-sm font-medium">
                 Password
@@ -66,7 +74,7 @@ export const AdminLogin: React.FC = () => {
             </div>
           </form>
         </CardContent>
-        
+
         <CardFooter>
           <Button
             onClick={handleSubmit}

@@ -20,7 +20,7 @@ model Admin {
 }
 
 model SectionOrder {
-  id      String   @id @default("default")
-  sections String[]
+  id        String   @id @default("default")
+  sections  String[]
   updatedAt DateTime @default(now()) @updatedAt
 }

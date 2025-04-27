@@ -1,5 +1,9 @@
 import express from "express";
-import { login, getSectionOrder, updateSectionOrder } from "../controllers/adminController";
+import {
+  login,
+  getSectionOrder,
+  updateSectionOrder,
+} from "../controllers/adminController";
 import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = express.Router();
