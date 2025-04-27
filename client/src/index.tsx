@@ -1,9 +1,7 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { Box } from "./screens/Box/Box";
+import App from "./App";
 
+// Removing StrictMode as it can cause issues with react-beautiful-dnd
 createRoot(document.getElementById("app") as HTMLElement).render(
-  <StrictMode>
-    <Box />
-  </StrictMode>,
+  <App />
 );

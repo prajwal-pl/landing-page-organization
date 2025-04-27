@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -8,8 +10,17 @@ import { HeroSection } from "./sections/HeroSection/HeroSection";
 import { OurStorySection } from "./sections/OurStorySection/OurStorySection";
 import { CoachingServicesSection } from "./sections/CoachingServicesSection/CoachingServicesSection";
 import { MeetCoachSection } from "./sections/MeetCoachSection/MeetCoachSection";
+import { getSectionOrder } from "../../services/api";
 
 export const Box = (): JSX.Element => {
+  const [sectionOrder, setSectionOrder] = useState<string[]>([
+    "hero",
+    "ourStory",
+    "coachingServices",
+    "meetCoach",
+  ]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   // Navigation menu items
   const navItems = [
     { label: "Home", active: true },
@@ -51,6 +62,42 @@ export const Box = (): JSX.Element => {
     },
   ];
 
+  useEffect(() => {
+    const fetchSectionOrder = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getSectionOrder();
+        if (data && data.sections) {
+          setSectionOrder(data.sections);
+        }
+      } catch (error) {
+        console.error("Error fetching section order:", error);
+        // Fall back to default order if there's an error
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSectionOrder();
+  }, []);
+
+  // Map section IDs to their actual components
+  const sectionComponents: Record<string, JSX.Element> = {
+    hero: <HeroSection />,
+    ourStory: <OurStorySection />,
+    coachingServices: <CoachingServicesSection />,
+    meetCoach: <MeetCoachSection />,
+  };
+
+  if (isLoading) {
+    // You could add a loading spinner here if desired
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
   return (
     <div className="relative w-full">
       <div className="w-full">
@@ -85,32 +132,52 @@ export const Box = (): JSX.Element => {
           </div>
         </header>
 
-        {/* 1. Hero Section */}
-        <HeroSection />
+        {/* Render sections based on the order from the database */}
+        {sectionOrder.map((sectionId, index) => (
+          <React.Fragment key={sectionId}>
+            {sectionComponents[sectionId]}
 
-        {/* Partners Section */}
-        <section className="w-full flex justify-center mt-20 mb-16 px-4 overflow-x-auto">
-          <div className="flex items-center gap-8 min-w-max">
-            {partnerLogos.map((logo, index) => (
-              <img
-                key={index}
-                className="object-contain"
-                style={{ width: logo.width, height: logo.height }}
-                alt={logo.alt}
-                src={logo.src}
-              />
-            ))}
-          </div>
-        </section>
+            {/* Insert partners section after the first section */}
+            {index === 0 && (
+              <section className="w-full flex justify-center mt-20 mb-16 px-4 overflow-x-auto">
+                <div className="flex items-center gap-8 min-w-max">
+                  {partnerLogos.map((logo, logoIndex) => (
+                    <img
+                      key={logoIndex}
+                      className="object-contain"
+                      style={{ width: logo.width, height: logo.height }}
+                      alt={logo.alt}
+                      src={logo.src}
+                    />
+                  ))}
+                </div>
+              </section>
+            )}
+          </React.Fragment>
+        ))}
 
-        {/* 2. Our Story Section */}
-        <OurStorySection />
-
-        {/* 3. Coaching Services Section */}
-        <CoachingServicesSection />
-
-        {/* 4. Meet Coach Section */}
-        <MeetCoachSection />
+        {/* Admin dashboard link widget - small, unobtrusive in bottom-right corner */}
+        <Link
+          to="/admin"
+          className="fixed bottom-5 right-5 w-10 h-10 bg-gray-800 bg-opacity-50 hover:bg-opacity-75 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 z-50"
+          title="Admin Dashboard"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 4L12 8M12 8C13.1046 8 14 7.10457 14 6C14 4.89543 13.1046 4 12 4C10.8954 4 10 4.89543 10 6C10 7.10457 10.8954 8 12 8ZM16 20C16 17.7909 14.2091 16 12 16C9.79086 16 8 17.7909 8 20M15.5 14C18.5376 14 21 16.4624 21 19.5V22H3V19.5C3 16.4624 5.46243 14 8.5 14"
+              stroke="white"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </Link>
       </div>
     </div>
   );
